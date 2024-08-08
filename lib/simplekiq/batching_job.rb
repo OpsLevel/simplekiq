@@ -61,7 +61,7 @@
 
 module Simplekiq
   module BatchingJob
-    include Sidekiq::Worker
+    include Sidekiq::Job
 
     BATCH_CLASS_NAME = "SimplekiqBatch"
 
@@ -141,7 +141,7 @@ module Simplekiq
   end
 
   class BaseBatch
-    include Sidekiq::Worker
+    include Sidekiq::Job
 
     def perform(*args)
       module_parent_of_class.new.perform_batch(*args)

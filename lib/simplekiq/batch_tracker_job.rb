@@ -7,7 +7,7 @@
 
 module Simplekiq
   class BatchTrackerJob
-    include Sidekiq::Worker
+    include Sidekiq::Job
 
     def perform(klass_name, bid, args)
       # In the future, this will likely surface the toplevel batch to a callback method on the

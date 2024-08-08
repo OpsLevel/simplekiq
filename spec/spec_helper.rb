@@ -55,11 +55,11 @@ module SidekiqBatchTestHelpers
 
   def run_all_jobs_and_batches
     loops_left = 100
-    while Sidekiq::Worker.jobs.any? || @batches.any?
+    while Sidekiq::Job.jobs.any? || @batches.any?
       loops_left -= 1
       raise "no more loops!" if loops_left.negative?
 
-      Sidekiq::Worker.drain_all # This will raise if any job fails
+      Sidekiq::Job.drain_all # This will raise if any job fails
       succeed_all_batches # Because nothing raised, we can assume success for all batches
     end
   end
