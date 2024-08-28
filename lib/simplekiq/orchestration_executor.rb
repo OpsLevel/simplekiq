@@ -4,26 +4,32 @@ module Simplekiq
   class OrchestrationExecutor
     def self.execute(args:, job:, workflow:)
       orchestration_batch = Sidekiq::Batch.new
-      orchestration_batch.description = "#{job.class.name} Simplekiq orchestration"
+      orchestration_batch.description = "[Simplekiq] #{job.class.name}. Params: #{Simplekiq.format_args(args)}"
       Simplekiq.auto_define_callbacks(orchestration_batch, args: args, job: job)
 
       orchestration_batch.jobs do
-        new.run_step(workflow, 0) unless workflow.empty?
+        new.run_step(workflow, 0, job.class.name, orchestration_batch.bid) unless workflow.empty?
       end
     end
 
-    def run_step(workflow, step)
+    def run_step(workflow, step, orchestration_job_class_name, orchestration_batch_bid)
       *jobs = workflow.at(step)
       # This will never be empty because Orchestration#serialized_workflow skips inserting
       # a new step for in_parallel if there were no inner jobs specified.
 
       next_step = step + 1
       step_batch = Sidekiq::Batch.new
-      step_batch.description = "Simplekiq orchestrated step #{next_step}"
+      step_batch.description = "[Simplekiq] step #{next_step} in #{orchestration_job_class_name}. " \
+        "Orchestration batch ID: #{orchestration_batch_bid}."
       step_batch.on(
         "success",
         self.class,
-        {"orchestration_workflow" => workflow, "step" => next_step}
+        {
+          "orchestration_workflow" => workflow,
+          "step" => next_step,
+          "orchestration_job_class_name" => orchestration_job_class_name,
+          "orchestration_batch_bid" => orchestration_batch_bid,
+        }
       )
 
       step_batch.jobs do
@@ -37,7 +43,7 @@ module Simplekiq
       return if options["step"] == options["orchestration_workflow"].length
 
       Sidekiq::Batch.new(status.parent_bid).jobs do
-        run_step(options["orchestration_workflow"], options["step"])
+        run_step(options["orchestration_workflow"], options["step"], options["orchestration_job_class_name"], options["orchestration_batch_bid"])
       end
     end
   end

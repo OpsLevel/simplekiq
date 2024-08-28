@@ -20,14 +20,14 @@ RSpec.describe Simplekiq::OrchestrationExecutor do
 
   describe ".execute" do
     def execute
-      described_class.execute(args: ["some", "args"], job: job, workflow: workflow)
+      described_class.execute(args: [{ "some" => "args" }], job: job, workflow: workflow)
     end
 
     it "kicks off the first step with a new batch" do
       batch_double = instance_double(Sidekiq::Batch, bid: 42)
       allow(Sidekiq::Batch).to receive(:new).and_return(batch_double)
-      expect(batch_double).to receive(:description=).with("FakeOrchestration Simplekiq orchestration")
-      expect(batch_double).to receive(:on).with("success", FakeOrchestration, "args" => ["some", "args"])
+      expect(batch_double).to receive(:description=).with("[Simplekiq] FakeOrchestration. Params: some=args")
+      expect(batch_double).to receive(:on).with("success", FakeOrchestration, "args" =>  [{ "some" => "args" }])
 
       batch_stack_depth = 0 # to keep track of how deeply nested within batches we are
       expect(batch_double).to receive(:jobs) do |&block|
@@ -48,7 +48,7 @@ RSpec.describe Simplekiq::OrchestrationExecutor do
   end
 
   describe "run_step" do
-    let(:step_batch) { instance_double(Sidekiq::Batch) }
+    let(:step_batch) { instance_double(Sidekiq::Batch, bid: 42) }
     let(:step) { 0 }
     let(:instance) { described_class.new }
 
@@ -68,11 +68,13 @@ RSpec.describe Simplekiq::OrchestrationExecutor do
       allow(Sidekiq::Batch).to receive(:new).and_return(step_batch)
       expect(step_batch).to receive(:on).with("success", described_class, {
         "orchestration_workflow" => workflow,
-        "step" => 1
+        "step" => 1,
+        "orchestration_job_class_name" => "FakeOrchestration",
+        "orchestration_batch_bid" => 42
       })
-      expect(step_batch).to receive(:description=).with("Simplekiq orchestrated step 1")
+      expect(step_batch).to receive(:description=).with("[Simplekiq] step 1 in FakeOrchestration. Orchestration batch ID: 42.")
 
-      instance.run_step(workflow, 0)
+      instance.run_step(workflow, 0, "FakeOrchestration", 42)
     end
   end
 end
