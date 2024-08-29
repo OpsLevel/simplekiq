@@ -8,7 +8,7 @@ module Simplekiq
       Simplekiq.auto_define_callbacks(orchestration_batch, args: args, job: job)
 
       orchestration_batch.jobs do
-        new.run_step(workflow, 0, job.class.name, orchestration_batch.bid) unless workflow.empty?
+        new.run_step(workflow, 0, job.class.name) unless workflow.empty?
       end
     end
 
@@ -19,8 +19,7 @@ module Simplekiq
 
       next_step = step + 1
       step_batch = Sidekiq::Batch.new
-      step_batch.description = "[Simplekiq] step #{next_step} in #{orchestration_job_class_name}. " \
-        "Orchestration batch ID: #{orchestration_batch_bid}."
+      step_batch.description = "[Simplekiq] step #{next_step} in #{orchestration_job_class_name}."
       step_batch.on(
         "success",
         self.class,
@@ -28,7 +27,6 @@ module Simplekiq
           "orchestration_workflow" => workflow,
           "step" => next_step,
           "orchestration_job_class_name" => orchestration_job_class_name,
-          "orchestration_batch_bid" => orchestration_batch_bid,
         }
       )
 
@@ -43,7 +41,7 @@ module Simplekiq
       return if options["step"] == options["orchestration_workflow"].length
 
       Sidekiq::Batch.new(status.parent_bid).jobs do
-        run_step(options["orchestration_workflow"], options["step"], options["orchestration_job_class_name"], options["orchestration_batch_bid"])
+        run_step(options["orchestration_workflow"], options["step"], options["orchestration_job_class_name"])
       end
     end
   end
