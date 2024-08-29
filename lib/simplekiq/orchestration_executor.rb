@@ -12,7 +12,7 @@ module Simplekiq
       end
     end
 
-    def run_step(workflow, step, orchestration_job_class_name, orchestration_batch_bid)
+    def run_step(workflow, step, orchestration_job_class_name)
       *jobs = workflow.at(step)
       # This will never be empty because Orchestration#serialized_workflow skips inserting
       # a new step for in_parallel if there were no inner jobs specified.
