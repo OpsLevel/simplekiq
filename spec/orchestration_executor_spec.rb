@@ -71,7 +71,7 @@ RSpec.describe Simplekiq::OrchestrationExecutor do
         "step" => 1,
         "orchestration_job_class_name" => "FakeOrchestration",
       })
-      expect(step_batch).to receive(:description=).with("[Simplekiq] step 1 in FakeOrchestration.")
+      expect(step_batch).to receive(:description=).with("[Simplekiq] step 1 in FakeOrchestration. Running OrcTest::JobA.")
 
       instance.run_step(workflow, 0, "FakeOrchestration")
     end
