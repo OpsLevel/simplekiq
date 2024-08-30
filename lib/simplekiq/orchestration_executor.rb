@@ -19,7 +19,7 @@ module Simplekiq
 
       next_step = step + 1
       step_batch = Sidekiq::Batch.new
-      step_batch.description = step_batch_description(jobs)
+      step_batch.description = step_batch_description(jobs, step, orchestration_job_class_name)
       step_batch.on(
         "success",
         self.class,
@@ -47,7 +47,7 @@ module Simplekiq
 
     private
 
-    def step_batch_description(jobs)
+    def step_batch_description(jobs, step, orchestration_job_class_name)
       description = "[Simplekiq] step #{step} in #{orchestration_job_class_name}. "
       if jobs.length > 1
         description += "Running #{jobs.length} jobs in parallel."
