@@ -4,7 +4,7 @@ module Simplekiq
   class OrchestrationExecutor
     def self.execute(args:, job:, workflow:)
       orchestration_batch = Sidekiq::Batch.new
-      orchestration_batch.description = "[Simplekiq] #{job.class.name}. Params: #{Simplekiq.format_args(args)}"
+      orchestration_batch.description = "[Simplekiq] #{job.class.name}. Params: #{args}}"
       Simplekiq.auto_define_callbacks(orchestration_batch, args: args, job: job)
 
       orchestration_batch.jobs do

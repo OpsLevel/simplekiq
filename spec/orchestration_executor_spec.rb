@@ -26,7 +26,7 @@ RSpec.describe Simplekiq::OrchestrationExecutor do
     it "kicks off the first step with a new batch" do
       batch_double = instance_double(Sidekiq::Batch, bid: 42)
       allow(Sidekiq::Batch).to receive(:new).and_return(batch_double)
-      expect(batch_double).to receive(:description=).with("[Simplekiq] FakeOrchestration. Params: some=args")
+      expect(batch_double).to receive(:description=).with("[Simplekiq] FakeOrchestration. Params: [{\"some\"=>\"args\"}]")
       expect(batch_double).to receive(:on).with("success", FakeOrchestration, "args" =>  [{ "some" => "args" }])
 
       batch_stack_depth = 0 # to keep track of how deeply nested within batches we are

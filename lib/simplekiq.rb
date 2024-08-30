@@ -17,12 +17,5 @@ module Simplekiq
 
       job.define_custom_batch_callbacks(batch) if job.respond_to?(:define_custom_batch_callbacks)
     end
-
-    def format_args(args)
-      return args unless args.is_a?(Array)
-      return args unless args[0].is_a?(Hash)
-
-      args[0].map { |key, value| "#{key}=#{value}" }.join(" ")
-    end
   end
 end
