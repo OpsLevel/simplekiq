@@ -1,5 +1,7 @@
 # Simplekiq
 
+[![Overall](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fapp.opslevel.com%2Fapi%2Fservice_level%2FTyWbG-WzcHJBboyCk3kGXOBxfSnW7W3NwwMzymWb-Eg)](https://app.opslevel.com/services/simplekiq/maturity-report)
+
 Any time that you find yourself needing to string together a long chain of jobs, particularly when there are multiple stages of Sidekiq-pro batches and callbacks involved, come home instead to the simple flavor of orchestrated job flow with Simplekiq.
 
 ## Installation
