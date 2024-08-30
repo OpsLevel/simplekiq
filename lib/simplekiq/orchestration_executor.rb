@@ -19,7 +19,7 @@ module Simplekiq
 
       next_step = step + 1
       step_batch = Sidekiq::Batch.new
-      step_batch.description = step_batch_description(jobs, step, orchestration_job_class_name)
+      step_batch.description = step_batch_description(jobs, next_step, orchestration_job_class_name)
       step_batch.on(
         "success",
         self.class,
