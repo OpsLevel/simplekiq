@@ -7,7 +7,7 @@ module Simplekiq
     include Sidekiq::Job
 
     extend Forwardable
-    def_delegators :orchestration, :run, :in_parallel
+    def_delegators :orchestration, :run, :in_parallel, :with_job_options
 
     def perform(*args)
       perform_orchestration(*args)
