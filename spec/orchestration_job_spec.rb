@@ -8,6 +8,10 @@ RSpec.describe Simplekiq::OrchestrationJob do
         run OrcTest::JobA, first
         run OrcTest::JobB, second
       end
+
+      def job_options
+        {}
+      end
     end)
 
     FakeOrchestration.new
@@ -28,8 +32,8 @@ RSpec.describe Simplekiq::OrchestrationJob do
       args: ["some", "args"],
       job: job,
       workflow: [
-        {"klass" => "OrcTest::JobA", "args" => ["some"]},
-        {"klass" => "OrcTest::JobB", "args" => ["args"]}
+        {"klass" => "OrcTest::JobA", "args" => ["some"], "opts" => {}},
+        {"klass" => "OrcTest::JobB", "args" => ["args"], "opts" => {}}
       ]
     )
 
@@ -66,6 +70,10 @@ RSpec.describe Simplekiq::OrchestrationJob do
             run OrcTest::JobC, second
           end
         end
+
+        def job_options
+          {}
+        end
       end)
 
       FakeOrchestration.new
@@ -76,10 +84,10 @@ RSpec.describe Simplekiq::OrchestrationJob do
         args: ["some", "args"],
         job: job,
         workflow: [
-          {"klass" => "OrcTest::JobA", "args" => ["some"]},
+          {"klass" => "OrcTest::JobA", "args" => ["some"], "opts" => {}},
           [
-            {"klass" => "OrcTest::JobB", "args" => ["some"]},
-            {"klass" => "OrcTest::JobC", "args" => ["args"]}
+            {"klass" => "OrcTest::JobB", "args" => ["some"], "opts" => {}},
+            {"klass" => "OrcTest::JobC", "args" => ["args"], "opts" => {}}
           ]
         ]
       )

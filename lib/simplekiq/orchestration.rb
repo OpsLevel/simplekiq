@@ -5,6 +5,12 @@ module Simplekiq
     attr_accessor :serial_workflow, :parallel_workflow
     def initialize
       @serial_workflow = []
+      @job_options = {}
+    end
+
+    def with_job_options(**options)
+      @job_options = options
+      self
     end
 
     def run(*step)
@@ -26,11 +32,11 @@ module Simplekiq
         case step[0]
         when Array
           step.map do |(job, *args)|
-            {"klass" => job.name, "args" => args}
+            {"klass" => job.name, "opts" => @job_options, "args" => args}
           end
         when Class
           job, *args = step
-          {"klass" => job.name, "args" => args}
+          {"klass" => job.name, "opts" => @job_options, "args" => args}
         end
       end
     end

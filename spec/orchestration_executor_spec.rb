@@ -16,7 +16,13 @@ RSpec.describe Simplekiq::OrchestrationExecutor do
     FakeOrchestration.new
   end
 
-  before { stub_const("OrcTest::JobA", Class.new) }
+  before { stub_const("OrcTest::JobA", Class.new do
+    class << self
+      def set(options)
+        self
+      end
+    end
+  end) }
 
   describe ".execute" do
     def execute

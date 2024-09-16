@@ -32,7 +32,7 @@ module Simplekiq
 
       step_batch.jobs do
         jobs.each do |job|
-          Object.const_get(job["klass"]).perform_async(*job["args"])
+          Object.const_get(job["klass"]).set(job["opts"]).perform_async(*job["args"])
         end
       end
     end

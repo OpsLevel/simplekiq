@@ -34,8 +34,8 @@ RSpec.describe Simplekiq::Orchestration do
       it "adds a step" do
         expect(subject).to eq [
           [
-            {"klass" => "OrcTest::JobA", "args" => ["syn"]},
-            {"klass" => "OrcTest::JobB", "args" => ["ack"]}
+            {"klass" => "OrcTest::JobA", "args" => ["syn"], "opts" => {}},
+            {"klass" => "OrcTest::JobB", "args" => ["ack"], "opts" => {}}
           ]
         ]
       end
