@@ -39,7 +39,11 @@ module Simplekiq
     end
 
     def orchestration
-      @orchestration ||= Orchestration.new.with_job_options(**job_options)
+      @orchestration ||= Orchestration.new(job_options: job_options)
+    end
+
+    def job_options
+      {}
     end
   end
 end

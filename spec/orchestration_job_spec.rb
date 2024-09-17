@@ -8,10 +8,6 @@ RSpec.describe Simplekiq::OrchestrationJob do
         run OrcTest::JobA, first
         run OrcTest::JobB, second
       end
-
-      def job_options
-        {}
-      end
     end)
 
     FakeOrchestration.new
@@ -70,10 +66,6 @@ RSpec.describe Simplekiq::OrchestrationJob do
             run OrcTest::JobC, second
           end
         end
-
-        def job_options
-          {}
-        end
       end)
 
       FakeOrchestration.new
@@ -89,6 +81,35 @@ RSpec.describe Simplekiq::OrchestrationJob do
             {"klass" => "OrcTest::JobB", "args" => ["some"], "opts" => {}},
             {"klass" => "OrcTest::JobC", "args" => ["args"], "opts" => {}}
           ]
+        ]
+      )
+
+      perform
+    end
+  end
+
+  context "with job_options defined" do
+    let!(:job) do
+      stub_const("FakeOrchestration", Class.new do
+        include Simplekiq::OrchestrationJob
+        def perform_orchestration(first, second)
+          run OrcTest::JobA, first
+        end
+
+        def job_options
+          { "queue" => "test-queue" }
+        end
+      end)
+
+      FakeOrchestration.new
+    end
+
+    it "populates the opts value on each orchestrated job" do
+      expect(Simplekiq::OrchestrationExecutor).to receive(:execute).with(
+        args: ["some", "args"],
+        job: job,
+        workflow: [
+          {"klass" => "OrcTest::JobA", "args" => ["some"], "opts" => { "queue" => "test-queue" }},
         ]
       )
 
