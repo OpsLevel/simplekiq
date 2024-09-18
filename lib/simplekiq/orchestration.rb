@@ -3,9 +3,9 @@
 module Simplekiq
   class Orchestration
     attr_accessor :serial_workflow, :parallel_workflow
-    def initialize(job_options: {})
+    def initialize(child_job_options: {})
       @serial_workflow = []
-      @job_options = job_options
+      @child_job_options = child_job_options
     end
 
     def run(*step)
@@ -27,11 +27,11 @@ module Simplekiq
         case step[0]
         when Array
           step.map do |(job, *args)|
-            {"klass" => job.name, "opts" => @job_options, "args" => args}
+            {"klass" => job.name, "opts" => @child_job_options, "args" => args}
           end
         when Class
           job, *args = step
-          {"klass" => job.name, "opts" => @job_options, "args" => args}
+          {"klass" => job.name, "opts" => @child_job_options, "args" => args}
         end
       end
     end

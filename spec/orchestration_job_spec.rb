@@ -96,7 +96,7 @@ RSpec.describe Simplekiq::OrchestrationJob do
           run OrcTest::JobA, first
         end
 
-        def job_options
+        def child_job_options
           { "queue" => "test-queue" }
         end
       end)
