@@ -109,13 +109,13 @@ end
 
 Inside `OrchestrationJob`, it's possible to set options that will be used for all the child jobs inside the workflow. Viable options are anything that would be called to the Sidekiq's `#set` call from the `Setter` API.
 
-Redefine the `child_job_options` class method on your OrchestrationJob to provide the options to the child jobs. Note that this method is only called at the start of orchestration, so you only have access to the initial `args` passed to the `OrchestratorJob` available to use. `child_job_options` must return a hash.
+Redefine the `child_job_options` method on your OrchestrationJob to provide the options to the child jobs. Note that this method is only called at the start of orchestration, so you only have access to the initial `args` passed to the `OrchestratorJob` available to use. `child_job_options` must return a hash.
 
 ```ruby
 class SomeOrchestrationJob
   include Simplekiq::OrchestrationJob
 
-  def self.child_job_options(*args)
+  def child_job_options(*args)
     if args[0] = "good"
       { "queue" => "the-good-queue" }
     else
