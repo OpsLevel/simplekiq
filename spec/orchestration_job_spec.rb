@@ -96,7 +96,7 @@ RSpec.describe Simplekiq::OrchestrationJob do
           run OrcTest::JobA, first, second
         end
 
-        def self.child_job_options(*args)
+        def child_job_options(*args)
           if args.first == "some"
             { "queue" => "some-test-queue" }
           else

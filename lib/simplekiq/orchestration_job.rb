@@ -10,16 +10,6 @@ module Simplekiq
     def_delegators :orchestration, :run, :in_parallel
     attr_reader :orchestration
 
-    def self.included(klass)
-      klass.extend ClassMethods
-    end
-
-    module ClassMethods
-      def child_job_options(*args)
-       {}
-      end
-    end
-
     def perform(*args)
       build_orchestration(*args)
       perform_orchestration(*args)
@@ -52,8 +42,12 @@ module Simplekiq
 
     def build_orchestration(*args)
       @orchestration ||= Orchestration.new(
-        child_job_options: self.class.child_job_options(*args)
+        child_job_options: child_job_options(*args)
       )
+    end
+
+    def child_job_options(*args)
+      {}
     end
   end
 end
