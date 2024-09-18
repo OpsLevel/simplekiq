@@ -93,11 +93,15 @@ RSpec.describe Simplekiq::OrchestrationJob do
       stub_const("FakeOrchestration", Class.new do
         include Simplekiq::OrchestrationJob
         def perform_orchestration(first, second)
-          run OrcTest::JobA, first
+          run OrcTest::JobA, first, second
         end
 
-        def child_job_options
-          { "queue" => "test-queue" }
+        def self.child_job_options(*args)
+          if args.first == "some"
+            { "queue" => "some-test-queue" }
+          else
+            { "queue" => "other-test-queue" }
+          end
         end
       end)
 
@@ -109,7 +113,7 @@ RSpec.describe Simplekiq::OrchestrationJob do
         args: ["some", "args"],
         job: job,
         workflow: [
-          {"klass" => "OrcTest::JobA", "args" => ["some"], "opts" => { "queue" => "test-queue" }},
+          {"klass" => "OrcTest::JobA", "args" => ["some", "args"], "opts" => { "queue" => "some-test-queue" }},
         ]
       )
 
