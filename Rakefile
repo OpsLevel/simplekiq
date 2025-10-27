@@ -16,10 +16,8 @@ namespace :test do
 
   desc "Test against Sidekiq 7.3"
   task :sidekiq7 do
-    sh "cp Gemfile.sidekiq7 Gemfile"
-    sh "bundle install"
+    sh "bundle install --gemfile=Gemfile.sidekiq7"
     sh "bundle exec rspec"
-    sh "git checkout Gemfile" # Restore original Gemfile
   end
 
   desc "Test against all Sidekiq versions"
