@@ -148,7 +148,12 @@ This project follows semantic versioning. See https://semver.org/ for details.
 
 After checking out the repo, run `bin/setup` to install dependencies. Note that this depends on `sidekiq-pro` which requires a [commercial license](https://sidekiq.org/products/pro.html) to install and use.
 
-Then, run `rake ci:specs` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Then, run `rake ci:specs` to run the tests. You can also run:
+- `rake test:sidekiq8` to test against Sidekiq 8.0 (default)
+- `rake test:sidekiq7` to test against Sidekiq 7.3
+- `rake test:all` to test against all supported Sidekiq versions
+
+You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 

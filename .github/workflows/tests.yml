@@ -25,17 +25,25 @@ jobs:
         ports:
           # Maps port 6379 on service container to the host
           - 6379:6379
+    strategy:
+      matrix:
+        sidekiq-version: ["7.3", "8.0"]
     env:
       BUNDLE_VERSION: "~> 2.1.4"
       BUNDLE_GEMS__CONTRIBSYS__COM: ${{ secrets.BUNDLE_GEMS__CONTRIBSYS__COM }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Install Ruby and gems
+        uses: actions/checkout@v5
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2.5'
+          ruby-version: "3.3.7"
           bundler-cache: true
-      - name: Run tests
+      - name: Install dependencies
         run: |
-          bundle exec rake ci:specs
+          if [ "${{ matrix.sidekiq-version }}" = "7.3" ]; then
+            cp Gemfile.sidekiq7 Gemfile
+          fi
+          bundle install
+      - name: Run tests
+        run: bundle exec rspec
