@@ -11,6 +11,7 @@ task default: :spec
 namespace :test do
   desc "Test against Sidekiq 8.0 (default)"
   task :sidekiq8 do
+    sh "bundle install"
     sh "bundle exec rspec"
   end
 

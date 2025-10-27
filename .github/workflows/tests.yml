@@ -27,9 +27,9 @@ jobs:
           - 6379:6379
     strategy:
       matrix:
-        sidekiq-version: ["7.3", "8.0"]
+        sidekiq-version: ["7", "8"]
     env:
-      BUNDLE_VERSION: "~> 2.1.4"
+      BUNDLE_VERSION: "~> 2.7.2"
       BUNDLE_GEMS__CONTRIBSYS__COM: ${{ secrets.BUNDLE_GEMS__CONTRIBSYS__COM }}
     steps:
       - name: Checkout code
@@ -39,12 +39,5 @@ jobs:
         with:
           ruby-version: "3.3.7"
           bundler-cache: true
-      - name: Install dependencies
-        run: bundle install
-      - name: Run tests
-        run: |
-          if [ "${{ matrix.sidekiq-version }}" = "7.3" ]; then
-            bundle exec rake test:sidekiq7
-          else
-            bundle exec rake test:sidekiq8
-          fi
+      - name: Install dependencies and Run tests
+        run: bundle exec rake test:sidekiq${{ matrix.sidekiq-version }}
