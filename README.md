@@ -167,8 +167,9 @@ For internal employees: consult the company wiki on the current standard process
 2. Fork it
 3. Create your feature branch (`git checkout -b my-new-feature`)
 4. Commit your changes (`git commit -am 'Add some feature'`)
-5. Push to the branch (`git push origin my-new-feature`)
-6. Create a new Pull Request
+5. Add a changelog entry using [Changie](https://changie.dev): `changie new`
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create a new Pull Request
 
 ## License
 

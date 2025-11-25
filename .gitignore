@@ -9,3 +9,8 @@
 /tmp/
 /vendor/bundle/
 Gemfile.lock
+
+# Changie - track unreleased changes but not version files
+/.changes/*
+!/.changes/unreleased/
+!/.changes/header.tpl.md
