@@ -19,7 +19,7 @@ module Simplekiq
       # If there is no parent batch, then it will simply be:
       # orchestration_batch( batch_of_first_step_of_the_orchestration )
       conditionally_within_parent_batch do
-        OrchestrationExecutor.execute(args: args, job: self, workflow: orchestration.serialized_workflow)
+        OrchestrationExecutor.execute(args: args, job: self, workflow: orchestration.serialized_workflow, child_job_options: orchestration.child_job_options)
       end
     end
 

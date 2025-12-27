@@ -30,7 +30,8 @@ RSpec.describe Simplekiq::OrchestrationJob do
       workflow: [
         {"klass" => "OrcTest::JobA", "args" => ["some"], "opts" => {}},
         {"klass" => "OrcTest::JobB", "args" => ["args"], "opts" => {}}
-      ]
+      ],
+      child_job_options: {}
     )
 
     perform
@@ -81,7 +82,8 @@ RSpec.describe Simplekiq::OrchestrationJob do
             {"klass" => "OrcTest::JobB", "args" => ["some"], "opts" => {}},
             {"klass" => "OrcTest::JobC", "args" => ["args"], "opts" => {}}
           ]
-        ]
+        ],
+        child_job_options: {}
       )
 
       perform
@@ -114,8 +116,17 @@ RSpec.describe Simplekiq::OrchestrationJob do
         job: job,
         workflow: [
           {"klass" => "OrcTest::JobA", "args" => ["some", "args"], "opts" => { "queue" => "some-test-queue" }},
-        ]
+        ],
+        child_job_options: { "queue" => "some-test-queue" }
       )
+
+      perform
+    end
+
+    it "passes child_job_options to the executor" do
+      expect(Simplekiq::OrchestrationExecutor).to receive(:execute) do |args:, job:, workflow:, child_job_options:|
+        expect(child_job_options).to eq({ "queue" => "some-test-queue" })
+      end
 
       perform
     end

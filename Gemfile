@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-source "https://gems.contribsys.com/" do
+source "https://enterprise.contribsys.com/" do
   gem "sidekiq-pro", ">= 7.3.0", "< 9"
 end
 

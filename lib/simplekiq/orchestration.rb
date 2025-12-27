@@ -3,6 +3,7 @@
 module Simplekiq
   class Orchestration
     attr_accessor :serial_workflow, :parallel_workflow
+    attr_reader :child_job_options
 
     def initialize(child_job_options: {})
       @serial_workflow = []
